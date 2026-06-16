@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="about-page" style="max-width: 600px; margin: 0 auto;">
+    <h2>关于我们</h2>
+    <div style="background: #2a2a4a; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+        <h3>开发者的话</h3>
+        <p style="margin-top: 1rem; line-height: 1.8;">
+            《换乘恋爱 EXchange》是一款基于情感选择的互动游戏，灵感来源于真实的情感综艺《换乘恋爱》。
+            <br><br>
+            在这里，你将体验到选择的甜蜜与痛苦，也希望你能在故事中，找到面对自己感情的勇气。
+            <br><br>
+            感谢每一位玩家的陪伴与支持 ❤️
+        </p>
+    </div>
+</div>
+
+<!-- 右下角回到游戏按钮 -->
+<a href="{{ url_for('main_game') }}" class="back-game-btn">回到游戏</a>
+{% endblock %}

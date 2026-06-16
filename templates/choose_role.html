@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="role-wrap">
+    <h1 class="role-title">选择你的身份</h1>
+    <p class="role-subtitle">请选择你要扮演的角色</p>
+
+<form method="POST" action="{{ url_for('choose_role') }}">
+    <!-- 性别按钮 -->
+    <div class="gender-btns">
+        <button type="button" class="gender-btn active" onclick="selectGender('female')">女性</button>
+        <button type="button" class="gender-btn" onclick="selectGender('male')">男性</button>
+    </div>
+    <input type="hidden" name="gender" id="genderInput" value="female" required>
+
+    <!-- 角色头像卡片 -->
+    <div class="avatar-grid">
+        <div class="avatar-card active" onclick="selectRole(this, '嘉宾1')">
+            <img src="{{ url_for('static', filename='img/female1.png') }}" id="avatar1">
+            <p>嘉宾1</p>
+        </div>
+        <div class="avatar-card" onclick="selectRole(this, '嘉宾2')">
+            <img src="{{ url_for('static', filename='img/female2.png') }}" id="avatar2">
+            <p>嘉宾2</p>
+        </div>
+        <div class="avatar-card" onclick="selectRole(this, '嘉宾3')">
+            <img src="{{ url_for('static', filename='img/female3.png') }}" id="avatar3">
+            <p>嘉宾3</p>
+        </div>
+        <div class="avatar-card" onclick="selectRole(this, '嘉宾4')">
+            <img src="{{ url_for('static', filename='img/female4.png') }}" id="avatar4">
+            <p>嘉宾4</p>
+        </div>
+        <input type="hidden" name="role" id="roleInput" value="嘉宾1">
+    </div>
+
+    <!-- 前任名字 -->
+    <div class="ex-section">
+        <label class="ex-label">输入你的前任名字</label>
+        <div class="ex-input-wrap">
+            <input type="text" name="x_name" class="ex-input" placeholder="给你的前任起个名字吧" required>
+        </div>
+        <p class="ex-hint">这个名字会在游戏剧情和短信中使用</p>
+    </div>
+
+    <!-- 前任性格 多选 -->
+    <div class="personality-section">
+        <label class="personality-label">选择你的前任性格（可多选）</label>
+        <div class="personality-grid">
+            <div class="personality-tag" onclick="togglePersonality(this)">温柔体贴</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">理性冷静</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">热情开朗</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">敏感细腻</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">占有欲强</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">嘴硬心软</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">外冷内热</div>
+            <div class="personality-tag" onclick="togglePersonality(this)">慢热被动</div>
+        </div>
+        <!-- 多选性格提交字段 -->
+        <input type="hidden" name="x_personality" id="personalityInput" value="">
+    </div>
+
+    <button type="submit" class="confirm-btn">确认进入</button>
+</form>
+</div>
+
+<script>
+// 性别切换
+function selectGender(gender) {
+    document.querySelectorAll('.gender-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('genderInput').value = gender;
+
+    if(gender === 'female') {
+        document.getElementById('avatar1').src = "{{ url_for('static', filename='img/female1.png') }}";
+        document.getElementById('avatar2').src = "{{ url_for('static', filename='img/female2.png') }}";
+        document.getElementById('avatar3').src = "{{ url_for('static', filename='img/female3.png') }}";
+        document.getElementById('avatar4').src = "{{ url_for('static', filename='img/female4.png') }}";
+    } else {
+        document.getElementById('avatar1').src = "{{ url_for('static', filename='img/male1.png') }}";
+        document.getElementById('avatar2').src = "{{ url_for('static', filename='img/male2.png') }}";
+        document.getElementById('avatar3').src = "{{ url_for('static', filename='img/male3.png') }}";
+        document.getElementById('avatar4').src = "{{ url_for('static', filename='img/male4.png') }}";
+    }
+}
+
+// 角色选择
+function selectRole(el, roleName) {
+    document.querySelectorAll('.avatar-card').forEach(card => card.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('roleInput').value = roleName;
+}
+
+// 多选性格
+let selectedPersonality = [];
+function togglePersonality(el) {
+    el.classList.toggle('active');
+    const text = el.innerText;
+    if(el.classList.contains('active')) {
+        selectedPersonality.push(text);
+    } else {
+        selectedPersonality = selectedPersonality.filter(item => item !== text);
+    }
+    document.getElementById('personalityInput').value = selectedPersonality.join(',');
+}
+</script>
+{% endblock %}

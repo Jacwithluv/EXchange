@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if game_stage == 0 or game_stage == 1 %}
+{% set bg_url = url_for('static', filename='img/game_bg_day.png') %}
+{% else %}
+{% set bg_url = url_for('static', filename='img/game_bg_night.png') %}
+{% endif %}
+
+<style>
+.game-page-wrap {
+    margin-top: 0px;
+    width: 85vw;
+    height: calc(85vh - 0px);
+    overflow: hidden;
+}
+.game-main {
+    width: 105%;
+    height: 105%;
+    background: url('{{ bg_url }}') top left / cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center; 
+    position: relative;
+    color: #fff;
+    padding: 0 0 40px 40px;
+}
+.game-top-info {
+    position: absolute;
+    top: 100px;
+    left: 30px;
+    font-size: 18px;
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+/* 修改这里：right 从50px改成70px，避免贴右边界溢出画面 */
+.mood-tag {
+    position: absolute;
+    top: 100px;
+    right: 70px;
+    font-size: 16px;
+    background: rgba(138, 43, 226, 0.7);
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+.dialog-box {
+    width: 80%;
+    max-width: 1000px;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 14px;
+    padding: 30px;
+    line-height: 1.8;
+    font-size: 17px;
+    margin-top: 20px;
+}
+.opt-btn {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0;
+    background: rgba(138, 43, 226, 0.25);
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.opt-btn:hover {
+    background: rgba(138, 43, 226, 0.4);
+}
+.next-stage-btn {
+    margin-top: 30px;
+    padding: 12px 30px;
+    background: rgba(138, 43, 226, 0.5);
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.next-stage-btn:hover {
+    background: rgba(138, 43, 226, 0.7);
+}
+#popup-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.msg-select-box, .anon-msg-box, .like-result-box {
+    background: rgba(20, 20, 40, 0.92);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+    border-radius: 14px;
+    padding: 30px;
+    width: 420px;
+    text-align: center;
+}
+.msg-btn, .confirm-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0;
+    background: rgba(138, 43, 226, 0.5);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.msg-btn:hover, .confirm-btn:hover {
+    background: rgba(138, 43, 226, 0.7);
+}
+.like-line {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #ddd;
+}
+</style>
+
+<div class="game-page-wrap">
+    <div class="game-main">
+        <div class="game-top-info">
+            第{{ game_day }}天 · {{ current_weekday }} · {{ stage_name }}
+        </div>
+        <div class="mood-tag">当日心境：{{ mood_tag }}</div>
+
+        <div class="dialog-box" id="ai-dialog">
+            <p id="plot-content">正在加载剧情...</p>
+            <div id="choice-box"></div>
+        </div>
+
+        <button class="next-stage-btn" id="manual-next" onclick="goNext()" style="display:none;">
+            进入下一阶段
+        </button>
+
+        <div id="popup-box"></div>
+    </div>
+</div>
+
+<script>
+// 嘉宾数组 安全兜底
+let guests = [];
+const rawGuests = '{{ guests | default("") }}';
+if (rawGuests && rawGuests.trim() !== "") {
+    try {
+        guests = JSON.parse(rawGuests);
+        if (!Array.isArray(guests)) guests = [];
+    } catch (e) {
+        guests = [];
+    }
+}
+
+// 页面基础参数
+const dayNum = {{ game_day | default(1) }};
+const stageNum = {{ stage | default(0) }};
+const nextPageUrl = "{{ url_for('next_stage') }}";
+const exName = "{{ user.x_name | default('X') }}"; // 你的前任名字，默认X
+const playerName = "{{ user.nickname | default('你') }}"; // 你的角色名
+
+// 跳转函数
+function goNext() {
+    window.location.href = nextPageUrl;
+}
+
+// 页面加载完毕 请求AI剧情
+window.onload = function () {
+    fetch("/api/ai_generate_plot", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            day: dayNum,
+            stage: stageNum,
+            ex_name: exName,
+            all_guest: guests,
+            player_name: playerName
+        })
+    })
+    .then(function(res) {
+        if (!res.ok) {
+            throw new Error("接口请求失败");
+        }
+        return res.json();
+    })
+    .then(function(data) {
+        // 渲染AI返回的剧情文本
+        const plotDom = document.getElementById("plot-content");
+        plotDom.innerText = data.plot_text || "暂无剧情内容";
+
+        // 渲染选项按钮
+        const choiceDom = document.getElementById("choice-box");
+        let choiceHtml = "";
+        const choiceList = data.choice_list || [];
+
+        for(let i = 0; i < choiceList.length; i++){
+            let item = choiceList[i];
+            choiceHtml += `<button class="opt-btn" onclick="userChoose('${item.affect}','${item.attach}')">${item.choice_text}</button>`;
+        }
+        choiceDom.innerHTML = choiceHtml;
+
+        // 无选项时 显示手动下一步按钮
+        if(choiceList.length === 0){
+            document.getElementById("manual-next").style.display = "block";
+        }
+
+        // 阶段3 弹出短信选择
+        if(stageNum === 3){
+            showMsgPopup();
+        }
+    })
+    .catch(function(err) {
+        // 捕获错误并提示
+        console.error("AI剧情接口错误：", err);
+        document.getElementById("plot-content").innerText = "剧情加载失败，请检查后端 /api/ai_generate_plot 接口";
+    });
+};
+
+// 选择选项 提交数据
+function userChoose(affStr, attachStr) {
+    let deltaEx = 0, deltaA = 0, deltaB = 0, deltaC = 0;
+    if (affStr && affStr.indexOf("ex") > -1) deltaEx = parseInt(affStr.split("+")[1]);
+    if (affStr && affStr.indexOf("a") > -1) deltaA = parseInt(affStr.split("+")[1]);
+    if (affStr && affStr.indexOf("b") > -1) deltaB = parseInt(affStr.split("+")[1]);
+    if (affStr && affStr.indexOf("c") > -1) deltaC = parseInt(affStr.split("+")[1]);
+
+    let deltaSafe = 0, deltaAnx = 0, deltaAvoid = 0, deltaMix = 0;
+    if (attachStr && attachStr.indexOf("safe") > -1) deltaSafe = parseInt(attachStr.split("+")[1]);
+    if (attachStr && attachStr.indexOf("anxious") > -1) deltaAnx = parseInt(attachStr.split("+")[1]);
+    if (attachStr && attachStr.indexOf("avoid") > -1) deltaAvoid = parseInt(attachStr.split("+")[1]);
+    if (attachStr && attachStr.indexOf("mix") > -1) deltaMix = parseInt(attachStr.split("+")[1]);
+
+    fetch("/api/change_all_data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            de: deltaEx, da: deltaA, db: deltaB, dc: deltaC,
+            ds: deltaSafe, dan: deltaAnx, dav: deltaAvoid, dm: deltaMix
+        })
+    }).then(() => goNext());
+}
+
+// 短信弹窗
+function showMsgPopup() {
+    const popupBox = document.getElementById("popup-box");
+    let buttonsHtml = "";
+    guests.forEach((name, i) => {
+        buttonsHtml += `<button class="msg-btn" onclick="sendHeartMsg(${i})">发送给 ${name}</button>`;
+    });
+    popupBox.innerHTML = `
+    <div class="msg-select-box">
+        <h3>深夜心动短信 · 选择发送对象</h3>
+        <p style="margin:15px 0;font-size:14px;">选择一位嘉宾发送短信</p>
+        ${buttonsHtml}
+    </div>
+    `;
+    popupBox.style.display = "flex";
+}
+
+// 发送短信
+function sendHeartMsg(targetIndex) {
+    fetch("/api/send_daily_msg", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ target: targetIndex })
+    })
+    .then(r => r.json())
+    .then(data => {
+        const popup = document.getElementById("popup-box");
+        if (data.has_msg) {
+            popup.innerHTML = `
+                <div class="anon-msg-box">
+                    <h3>💌 匿名短信</h3>
+                    <p>${data.anon_msg_content}</p>
+                    <button class="confirm-btn" onclick="finishDaily()">确认</button>
+                </div>
+            `;
+        } else {
+            showDailyResult();
+        }
+    });
+}
+
+function finishDaily() {
+    document.getElementById("popup-box").style.display = "none";
+    showDailyResult();
+}
+
+// 好感结算
+function showDailyResult() {
+    fetch("/api/get_now_like_data")
+    .then(r => r.json())
+    .then(data => {
+        const popup = document.getElementById("popup-box");
+        let linesHtml = "";
+        const keys = ["ex", "a", "b", "c"];
+        keys.forEach((key, i) => {
+            linesHtml += `<div class="like-line">${guests[i] || "嘉宾"}：${data[key] || 0}</div>`;
+        });
+        popup.innerHTML = `
+            <div class="like-result-box">
+                <h2>📊 好感结算</h2>
+                ${linesHtml}
+                <hr style="margin:20px 0;border-color:#444;">
+                <p>心境：${data.mood || ""}</p>
+                <button class="confirm-btn" onclick="goNext()">下一天</button>
+            </div>
+        `;
+        popup.style.display = "flex";
+    });
+}
+</script>
+{% endblock %}

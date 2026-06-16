@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="modal-overlay">
+    <div class="modal-card">
+        <button class="modal-close" onclick="window.location.href='/'">&times;</button>
+        <h2 class="modal-title">登录</h2>
+        
+        <!-- 新增：报错提示，和你弹窗样式融合 -->
+        {% if error %}
+            <div class="modal-error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST" class="modal-form">
+            <div class="form-group">
+                <input type="text" name="account" required placeholder="账号" class="modal-input">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" required placeholder="密码" class="modal-input">
+            </div>
+            <p class="forgot-password">忘记密码？</p>
+            <button type="submit" class="modal-btn">登录</button>
+            <p class="modal-footer">还没有账号？<a href="{{ url_for('register') }}">立即注册</a></p>
+        </form>
+    </div>
+</div>
+{% endblock %}

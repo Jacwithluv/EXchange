@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft Yahei", Arial, sans-serif;
+}
+body {
+    color: #ffffff;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+/* 深空星空背景不变 */
+.end-bg {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0c0922;
+    background-image: radial-gradient(rgba(140,100,240,0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    z-index: -1;
+}
+/* 页面总容器：取消垂直居中，顶部对齐，上下增加padding，允许高度撑开滚动 */
+.end-page-wrap {
+    margin-top: 80px;
+    width: 100vw;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: flex-start;
+    padding: 60px 40px 80px;
+    gap: 35px;
+}
+/* 左侧人物卡片 尺寸不变 */
+.end-left {
+    width: 26%;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+}
+.character-card {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    padding: 24px 18px;
+    border-radius: 16px;
+    box-shadow: 0 0 35px rgba(138, 43, 226, 0.28);
+    max-width: 240px;
+}
+.character-img {
+    width: 100%;
+    max-width: 190px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+.char-name {
+    font-size: 22px;
+    margin-top: 14px;
+    letter-spacing: 1px;
+}
+.heart-rate {
+    color: #d6b3ff;
+    font-size: 15px;
+    margin-top: 8px;
+}
+/* 右侧内容区域：取消固定高度，自适应高度 */
+.end-right {
+    width: 74%;
+    overflow-y: visible;
+    scrollbar-width: none;
+}
+.end-right::-webkit-scrollbar {
+    display: none;
+}
+/* 通用面板样式不变 */
+.result-panel {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    line-height: 1.7;
+    max-width: 760px;
+}
+.result-panel h2, .result-panel h3 {
+    color: #e0c8ff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:16px;
+}
+.result-panel h2 {
+    font-size: 20px;
+}
+.result-panel h3 {
+    font-size: 18px;
+}
+.result-panel p {
+    font-size: 15px;
+    color: #f0f0f0;
+}
+.attach-item {
+    font-size: 15px;
+    margin: 6px 0;
+    color: #f0f0f0;
+}
+.letter-block {
+    margin-bottom: 28px;
+}
+.letter-content {
+    margin-top: 10px;
+    padding: 14px;
+    border-left: 2px solid #caa6ff;
+}
+.hidden {
+    display: none;
+}
+/* 全局按钮 缩小尺寸 */
+.common-btn {
+    padding: 9px 26px;
+    border: none;
+    border-radius: 30px;
+    background: rgba(138, 43, 226, 0.5);
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.common-btn:hover {
+    background: rgba(138, 43, 226, 0.7);
+    box-shadow: 0 0 14px rgba(138, 43, 226, 0.35);
+}
+.back-wrap {
+    text-align: center;
+    margin-top: 12px;
+}
+.toggle-mini-btn {
+    padding:4px 12px;
+    font-size:13px;
+}
+</style>
+
+<div class="end-bg"></div>
+<div class="end-page-wrap">
+    <!-- 左侧缩小后的嘉宾卡片 -->
+    <div class="end-left">
+        <div class="character-card">
+            <img src="{{ final_char.img_url }}" class="character-img" alt="最终选择嘉宾">
+            <div class="char-name">{{ final_char.name }}</div>
+            <div class="heart-rate">心动指数 {{ final_char.heart_value }}%</div>
+        </div>
+    </div>
+
+    <!-- 右侧文本面板 -->
+    <div class="end-right">
+        <!-- 结局标题面板 默认展开 -->
+        <div class="result-panel">
+            <h2>达成结果：{{ ai_data.ending_title }}</h2>
+            <div class="content-block">
+                <p>{{ ai_data.ending_desc }}</p>
+            </div>
+        </div>
+
+        <!-- 依恋型人格分析 点击展开/收起 -->
+        <div class="result-panel">
+            <h3>
+                依恋型人格分析
+                <button class="common-btn toggle-mini-btn" id="toggleAttachBtn">点击查看</button>
+            </h3>
+            <div class="attach-list hidden" id="attachBox">
+                <div class="attach-item">安全型 {{ ai_data.attach_safe }}%</div>
+                <div class="attach-item">焦虑型 {{ ai_data.attach_anx }}%</div>
+                <div class="attach-item">回避型 {{ ai_data.attach_avoid }}%</div>
+                <div class="attach-item">混乱型 {{ ai_data.attach_mix }}%</div>
+            </div>
+        </div>
+
+        <!-- 恋爱建议 点击展开/收起 -->
+        <div class="result-panel">
+            <h3>
+                恋爱建议
+                <button class="common-btn toggle-mini-btn" id="toggleTipBtn">点击查看</button>
+            </h3>
+            <div class="tip-content hidden" id="tipBox">
+                <p>{{ ai_data.love_tips }}</p>
+            </div>
+        </div>
+
+        <!-- X信件 原有点开逻辑 -->
+        <div class="result-panel letter-block">
+            <h3>{{ user.x_name | default("X") }}给你的信</h3>
+            <button class="common-btn" id="openLetterBtn">点击查看信件</button>
+            <div class="letter-content hidden" id="letterBox">
+                <p>{{ ai_data.x_letter }}</p>
+            </div>
+        </div>
+
+        <!-- 返回按钮 -->
+        <div class="back-wrap">
+            <button class="common-btn" id="backGameBtn">返回游戏主界面</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 1. 依恋人格切换
+const toggleAttachBtn = document.getElementById("toggleAttachBtn");
+const attachBox = document.getElementById("attachBox");
+toggleAttachBtn.addEventListener("click", () => {
+    attachBox.classList.toggle("hidden");
+    toggleAttachBtn.innerText = attachBox.classList.contains("hidden") ? "点击查看" : "收起";
+});
+
+// 2. 恋爱建议切换
+const toggleTipBtn = document.getElementById("toggleTipBtn");
+const tipBox = document.getElementById("tipBox");
+toggleTipBtn.addEventListener("click", () => {
+    tipBox.classList.toggle("hidden");
+    toggleTipBtn.innerText = tipBox.classList.contains("hidden") ? "点击查看" : "收起";
+});
+
+// 3. 信件切换
+const openLetterBtn = document.getElementById("openLetterBtn");
+const letterBox = document.getElementById("letterBox");
+openLetterBtn.addEventListener("click", () => {
+    letterBox.classList.toggle("hidden");
+    openLetterBtn.innerText = letterBox.classList.contains("hidden") ? "点击查看信件" : "收起信件";
+});
+
+// 返回游戏主页
+const backGameBtn = document.getElementById("backGameBtn");
+backGameBtn.addEventListener("click", () => {
+    window.location.href = "/main_game";
+});
+</script>
+{% endblock %}

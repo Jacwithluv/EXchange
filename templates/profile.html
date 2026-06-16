@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-page">
+    <div class="profile-sidebar">
+        <div class="sidebar-item active" data-tab="info">个人档案</div>
+        <div class="sidebar-item" data-tab="heart">心动值</div>
+        <div class="sidebar-item" data-tab="messages">心动短信</div>
+        <div class="sidebar-item" data-tab="settings">设置</div>
+        <a href="{{ url_for('main_game') }}" class="back-to-game">回到游戏</a>
+    </div>
+
+    <div class="profile-main">
+        <!-- 个人档案 -->
+        <div class="tab-content active" id="tab-info">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    {% set avatar_src = url_for('static', filename='img/default.png') %}
+                    {% if user.role_name == "女性嘉宾1" %}
+                        {% set avatar_src = url_for('static', filename='img/female1.png') %}
+                    {% elif user.role_name == "女性嘉宾2" %}
+                        {% set avatar_src = url_for('static', filename='img/female2.png') %}
+                    {% elif user.role_name == "女性嘉宾3" %}
+                        {% set avatar_src = url_for('static', filename='img/female3.png') %}
+                    {% elif user.role_name == "女性嘉宾4" %}
+                        {% set avatar_src = url_for('static', filename='img/female4.png') %}
+                    {% elif user.role_name == "男性嘉宾1" %}
+                        {% set avatar_src = url_for('static', filename='img/male1.png') %}
+                    {% elif user.role_name == "男性嘉宾2" %}
+                        {% set avatar_src = url_for('static', filename='img/male2.png') %}
+                    {% elif user.role_name == "男性嘉宾3" %}
+                        {% set avatar_src = url_for('static', filename='img/male3.png') %}
+                    {% elif user.role_name == "男性嘉宾4" %}
+                        {% set avatar_src = url_for('static', filename='img/male4.png') %}
+                    {% endif %}
+                    <img src="{{ avatar_src }}" alt="头像">
+                </div>
+                <div>
+                    <h2>{{ user.nickname }}</h2>
+                    <p>账号：{{ session.user }}</p>
+                    <p>当前角色：{{ user.role_name }}</p>
+                    <p>前任昵称：{{ user.x_name if user.x_name else '未填写' }}</p>
+                    <p>前任性格：{{ user.x_personality if user.x_personality else '未填写' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 心动值 -->
+        <div class="tab-content" id="tab-heart">
+            <h2>心动值详情</h2>
+            <div class="like-grid">
+                {% for guest in user.likes %}
+                <div class="like-card">
+                    <img src="{{ url_for('static', filename='img/' + guest.img) }}" alt="{{ guest.name }}">
+                    <p>{{ guest.name }}</p>
+                    <p>当前心动值：{{ guest.value }}%</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 心动短信 -->
+        <div class="tab-content" id="tab-messages">
+            <h2>收到的心动短信</h2>
+            {% if user.messages and user.messages|length > 0 %}
+                {% for msg in user.messages %}
+                <div class="msg-item">
+                    <p><strong>第{{ msg.day }}天 · 来自：匿名</strong></p>
+                    <p>{{ msg.content }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty-tip">暂未收到任何心动短信</p>
+            {% endif %}
+        </div>
+
+        <!-- 设置 -->
+        <div class="tab-content" id="tab-settings">
+            <h2>个人设置</h2>
+            <div class="setting-box">
+                <p>游戏昵称：{{ user.nickname }}</p>
+                <p>登录账号：{{ session.user }}</p>
+                <p>当前游戏天数：第 {{ user.current_day }} 天</p>
+                <p>游戏角色：{{ user.role_name }}</p>
+            </div>
+            <div class="setting-buttons">
+                <a href="{{ url_for('end_game') }}" class="setting-btn danger">重置本局游戏数据</a>
+                <a href="{{ url_for('logout') }}" class="setting-btn">退出登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 侧边栏标签切换
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', function () {
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+    });
+});
+</script>
+{% endblock %}

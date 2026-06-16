@@ -1,0 +1,1055 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: '宋体', serif;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+
+/* 顶部导航栏 */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(26, 26, 46, 0.95);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-brand {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-right a {
+    color: #ccc;
+    margin-left: 2rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.nav-right a:hover {
+    color: #fff;
+}
+
+.container {
+    margin-top: 80px;
+    padding: 2rem 5%;
+}
+
+/* 欢迎页信封样式 */
+.welcome-page {
+    text-align: center;
+    padding-top: 10rem;
+}
+
+.envelope-container {
+    position: relative;
+    display: inline-block;
+}
+
+.envelope {
+    width: 300px;
+    height: 200px;
+    background: #2a2a4a;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.3);
+}
+
+.wax-seal {
+    width: 50px;
+    height: 50px;
+    background: #8a2be2;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.wax-seal:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.letter {
+    width: 300px;
+    background: #f0f0f5;
+    color: #333;
+    padding: 2rem;
+    border-radius: 10px;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.3);
+}
+
+.hidden {
+    display: none;
+}
+
+.enter-btn {
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    background: #8a2be2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.enter-btn:hover {
+    background: #7b1fa2;
+}
+
+.tagline {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    color: #ccc;
+}
+
+/* 角色选择页 */
+.role-page {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 2rem;
+}
+
+.page-title {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    color: #aaa;
+    margin-bottom: 2rem;
+}
+
+/* 性别选择栏 */
+.gender-select {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.gender-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ccc;
+    padding: 0.8rem 3rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.gender-btn.selected {
+    background: rgba(138, 43, 226, 0.2);
+    border-color: #8a2be2;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+}
+
+.gender-btn:hover {
+    border-color: #8a2be2;
+    color: #fff;
+}
+
+/* 角色卡片 */
+.role-selector {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.role-card {
+    width: 150px;
+    background: rgba(42, 42, 74, 0.6);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.role-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+}
+
+.role-card.selected {
+    border-color: #8a2be2;
+    background: rgba(138, 43, 226, 0.1);
+}
+
+.role-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #2a2a4a;
+    margin: 0 auto 0.8rem;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.role-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 多选性格选项 */
+.personality-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.personality-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ccc;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: rgba(42, 42, 74, 0.6);
+    transition: all 0.3s;
+}
+
+.personality-checkbox:hover {
+    background: rgba(138, 43, 226, 0.2);
+}
+
+.personality-checkbox input:checked + span {
+    color: #fff;
+}
+
+/* 隐藏元素 */
+.hidden {
+    display: none;
+}
+
+/* 个人档案页 */
+.profile-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #2a2a4a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 好感度网格（参考你的图片样式） */
+.好感度-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.好感度-card {
+    background: rgba(42, 42, 74, 0.6);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.好感度-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 0.8rem;
+}
+
+.like-value {
+    color: #ff6b9d;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 结局分析页 */
+.result-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.attachment-chart {
+    width: 100%;
+    height: 300px;
+    background: #2a2a4a;
+    border-radius: 10px;
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 信件页 */
+.letters-list {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.letter-item {
+    background: #2a2a4a;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.letter-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+}
+
+.letter-date {
+    color: #8a2be2;
+    font-size: 0.9rem;
+}
+
+.letter-title {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+}
+
+/* 弹窗遮罩层 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 30, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 弹窗卡片 */
+.modal-card {
+    background: rgba(30, 30, 60, 0.9);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    border-radius: 12px;
+    padding: 2.5rem;
+    width: 380px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(138, 43, 226, 0.2);
+}
+
+/* 关闭按钮 */
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+/* 弹窗标题 */
+.modal-title {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+}
+
+/* 登录/注册弹窗报错样式 */
+.modal-error {
+    color: #ff6b6b;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 14px;
+}
+
+/* 表单输入框 */
+.modal-form .form-group {
+    margin-bottom: 1.2rem;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: rgba(40, 40, 70, 0.8);
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.modal-input::placeholder {
+    color: #888;
+}
+
+.modal-input:focus {
+    border-color: #8a2be2;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+}
+
+/* 忘记密码文字 */
+.forgot-password {
+    text-align: right;
+    color: #8a2be2;
+    font-size: 0.9rem;
+    margin: -0.5rem 0 1.5rem 0;
+    cursor: pointer;
+}
+
+/* 协议勾选框 */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ccc;
+    font-size: 0.9rem;
+    margin: 1rem 0 1.5rem 0;
+    cursor: pointer;
+}
+
+.checkbox-group input {
+    accent-color: #8a2be2;
+}
+
+/* 按钮样式 */
+.modal-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #8a2be2 0%, #6a1b9a 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+}
+
+.modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
+}
+
+/* 底部文字 */
+.modal-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.modal-footer a {
+    color: #8a2be2;
+    text-decoration: none;
+}
+
+.modal-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* ========== 个人档案页面 完美还原版 ========== */
+.profile-page {
+    margin-top: 80px;
+    display: flex;
+    width: 100%;
+    padding: 0;
+    /* 关键：让内容从顶部开始，不垂直居中 */
+    align-items: flex-start;
+}
+
+.profile-sidebar {
+    width: 160px;
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 8px;
+    margin-left: 20px;
+    margin-right: 2rem;
+}
+.sidebar-item {
+    padding: 0.8rem 1.2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.sidebar-item.active {
+    background: rgba(138, 43, 226, 0.2);
+    color: #fff;
+    border-left: 3px solid #8a2be2;
+}
+.back-to-game {
+    display: block;
+    text-align: center;
+    padding: 1rem;
+    color: #8a2be2;
+    text-decoration: none;
+}
+
+.profile-main {
+    flex: 1;
+    padding-top: 0;
+    color: #fff;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #444;
+}
+.like-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.like-card {
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+.like-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: #444;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.msg-item {
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.8rem 0;
+}
+.setting-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.setting-btn {
+    padding: 0.8rem 2rem;
+    border: 1px solid #666;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.setting-btn:hover {
+    border-color: #8a2be2;
+    background: rgba(138, 43, 226, 0.2);
+}
+.setting-btn.danger {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+.setting-btn.danger:hover {
+    background: rgba(255, 107, 107, 0.2);
+}
+
+/* 角色选择页面 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #fff;
+    font-family: "Microsoft Yahei", sans-serif;
+}
+.role-wrap {
+    width: 100vw;
+    min-height: 100vh;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+.role-title {
+    font-size: 26px;
+    margin-bottom: 0.5rem;
+}
+.role-subtitle {
+    color: #aaa;
+    margin-bottom: 2rem;
+}
+
+/* 性别选择按钮 */
+.gender-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.gender-btn {
+    padding: 0.8rem 2.5rem;
+    border: 1px solid #666;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.gender-btn.active {
+    border-color: #9932cc;
+    background: rgba(153, 50, 204, 0.2);
+    color: #e8c8ff;
+}
+
+/* 角色头像选择 */
+.avatar-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.avatar-card {
+    width: 120px;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 0.8rem;
+    transition: all 0.3s;
+}
+.avatar-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    border: 2px solid transparent;
+}
+.avatar-card p {
+    font-size: 14px;
+    color: #aaa;
+}
+.avatar-card.active {
+    background: rgba(153, 50, 204, 0.2);
+    border: 1px solid #9932cc;
+}
+.avatar-card.active img {
+    border-color: #9932cc;
+}
+
+/* 前任信息区域 */
+.ex-section {
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    text-align: left;
+}
+.ex-label {
+    font-size: 16px;
+    margin-bottom: 0.8rem;
+    color: #ddd;
+}
+.ex-input-wrap {
+    position: relative;
+}
+.ex-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+}
+.ex-input:focus {
+    outline: none;
+    border-color: #9932cc;
+}
+.ex-hint {
+    font-size: 12px;
+    color: #888;
+    margin-top: 0.3rem;
+}
+
+/* 性格选择区域 */
+.personality-section {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+}
+.personality-label {
+    font-size: 16px;
+    margin-bottom: 1rem;
+    color: #ddd;
+    text-align: left;
+}
+.personality-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+}
+.personality-tag {
+    padding: 0.7rem;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #aaa;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+}
+.personality-tag:hover {
+    border-color: #9932cc;
+}
+.personality-tag.active {
+    background: rgba(153, 50, 204, 0.2);
+    border-color: #9932cc;
+    color: #e8c8ff;
+}
+
+/* 确认按钮 */
+.confirm-btn {
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, #9932cc, #6a1b9a);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(153, 50, 204, 0.4);
+}
+
+/* ========== 个人档案页面样式 ========== */
+/* 侧边栏 */
+.profile-sidebar {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 8px;
+    width: 160px;
+}
+.sidebar-item {
+    padding: 0.8rem 1.2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.sidebar-item.active {
+    background: rgba(138, 43, 226, 0.2);
+    color: #fff;
+    border-left: 3px solid #8a2be2;
+}
+.back-to-game {
+    display: block;
+    text-align: center;
+    padding: 1rem;
+    color: #8a2be2;
+    text-decoration: none;
+}
+
+/* 主内容区 */
+.profile-main {
+    margin-left: 200px;
+    padding: 2rem;
+    color: #fff;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #444;
+}
+.like-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.like-card {
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+.like-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: #444;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.msg-item {
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.8rem 0;
+}
+.setting-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.setting-btn {
+    padding: 0.8rem 2rem;
+    border: 1px solid #666;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.setting-btn:hover {
+    border-color: #8a2be2;
+    background: rgba(138, 43, 226, 0.2);
+}
+.setting-btn.danger {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+.setting-btn.danger:hover {
+    background: rgba(255, 107, 107, 0.2);
+}
+
+/* 角色选择页面 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #fff;
+    font-family: "Microsoft Yahei", sans-serif;
+}
+.role-wrap {
+    width: 100vw;
+    min-height: 100vh;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+.role-title {
+    font-size: 26px;
+    margin-bottom: 0.5rem;
+}
+.role-subtitle {
+    color: #aaa;
+    margin-bottom: 2rem;
+}
+
+/* 性别选择按钮 */
+.gender-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.gender-btn {
+    padding: 0.8rem 2.5rem;
+    border: 1px solid #666;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.gender-btn.active {
+    border-color: #9932cc;
+    background: rgba(153, 50, 204, 0.2);
+    color: #e8c8ff;
+}
+
+/* 角色头像选择 */
+.avatar-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.avatar-card {
+    width: 120px;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 0.8rem;
+    transition: all 0.3s;
+}
+.avatar-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    border: 2px solid transparent;
+}
+.avatar-card p {
+    font-size: 14px;
+    color: #aaa;
+}
+.avatar-card.active {
+    background: rgba(153, 50, 204, 0.2);
+    border: 1px solid #9932cc;
+}
+.avatar-card.active img {
+    border-color: #9932cc;
+}
+
+/* 前任信息区域 */
+.ex-section {
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    text-align: left;
+}
+.ex-label {
+    font-size: 16px;
+    margin-bottom: 0.8rem;
+    color: #ddd;
+}
+.ex-input-wrap {
+    position: relative;
+}
+.ex-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+}
+.ex-input:focus {
+    outline: none;
+    border-color: #9932cc;
+}
+.ex-hint {
+    font-size: 12px;
+    color: #888;
+    margin-top: 0.3rem;
+}
+
+/* 性格选择区域 */
+.personality-section {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+}
+.personality-label {
+    font-size: 16px;
+    margin-bottom: 1rem;
+    color: #ddd;
+    text-align: left;
+}
+.personality-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+}
+.personality-tag {
+    padding: 0.7rem;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: #aaa;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+}
+.personality-tag:hover {
+    border-color: #9932cc;
+}
+.personality-tag.active {
+    background: rgba(153, 50, 204, 0.2);
+    border-color: #9932cc;
+    color: #e8c8ff;
+}
+
+/* 确认按钮 */
+.confirm-btn {
+    padding: 1rem 3rem;
+    background: linear-gradient(135deg, #9932cc, #6a1b9a);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(153, 50, 204, 0.4);
+}
